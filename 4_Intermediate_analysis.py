@@ -67,7 +67,7 @@ agg.to_excel('odds_bucket_roi.xlsx')
 
 
 
-/*
+"""
 Purpose:
 
 To find out which teams/events I bet on the most, and whether those bets were profitable or not.
@@ -110,7 +110,7 @@ Top 20 picks by frequency
 
 Top 50 saved to top_picks.xlsx
 
-*/
+"""
 
 top_picks = df.groupby(['pick','game']).agg(count=('bet_id','count'), profit=('profit_amount','sum'), loss=('loss_amount','sum'))
 top_picks['net'] = top_picks['profit'].fillna(0) - top_picks['loss'].fillna(0)
@@ -128,7 +128,7 @@ top_picks.sort_values('count', ascending=False).head(50).to_excel('top_picks.xls
 
 
 
-/*
+"""
 Purpose:
 
 To analyze how different bet sizes perform and how often each stake size is used.
@@ -168,7 +168,7 @@ Stake tier summary
 
 Saved as stake_tier_stats.xlsx
 
-*/
+"""
 
 bins = [0, 1_000_000, 10_000_000, 50_000_000, 200_000_000, 10**12]
 labels = ['tiny (0–1M)','small (1M–10M)','medium (10M–50M)','large (50M–200M)','whale (200M–1T)']
@@ -192,7 +192,7 @@ tier_stats.to_excel('stake_tier_stats.xlsx')
 
 
 
-/*
+"""
 Purpose:
 
 To check whether any numeric variables in the dataset move together or influence each other.
@@ -232,7 +232,7 @@ Correlation matrix
 
 Saved as numeric_corr.xlsx
 
-*/
+"""
 
 numcols = ['stake_final','profit_amount','loss_amount','refund_amount','odds']
 numcols = [c for c in numcols if c in df.columns]
