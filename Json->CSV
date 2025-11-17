@@ -1,0 +1,82 @@
+#conver the json file to csv file
+
+import json
+import re
+import pandas as pd
+
+# Load JSON file
+with open("Bookies_stats.txt", "r") as f:
+    data = json.load(f)
+
+rows = []
+print(f)
+
+for bet_id, info in data.items():
+
+    game = info.get("game")
+    name = info.get("name")
+
+    result_type = None
+    amount = None
+    odds = None
+    stake = None
+    pick = None
+    market = None
+
+    # detect which field contains event details
+    text = None
+    for key in ["won", "lost", "refunded", "pending"]:
+        if info.get(key):
+            result_type = key.capitalize()   # Won/Lost/Refunded/Pending
+            text = info[key]
+            break
+
+    if text:
+
+        # Pattern for WON
+        m = re.search(
+            r"Won \$([\d,]+) \(x([\d\.]+)\) from a \$([\d,]+) bet on (.*?) \((.*?)\)",
+            text
+        )
+        if m:
+            amount, odds, stake, pick, market = m.groups()
+
+        else:
+            # Pattern for LOST
+            m = re.search(
+                r"Lost \$([\d,]+) \(x([\d\.]+)\) bet on (.*?) \((.*?)\)",
+                text
+            )
+            if m:
+                amount, odds, pick, market = m.groups()
+
+            else:
+                # Pattern for REFUNDED
+                m = re.search(
+                    r"Refunded \$([\d,]+) \(x([\d\.]+)\) bet on (.*?) \((.*?)\)",
+                    text
+                )
+                if m:
+                    amount, odds, pick, market = m.groups()
+
+    # build row
+    rows.append({
+        "bet_id": bet_id,
+        "game": game,
+        "name": name,
+        "result_type": result_type,
+        "amount": amount,
+        "odds": odds,
+        "stake": stake,
+        "pick": pick,
+        "market": market
+    })
+
+# Create DataFrame
+df = pd.DataFrame(rows)
+
+# Save CSV
+output_path = "bookies_clean1.csv"
+df.to_csv(output_path, index=False)
+
+output_path
