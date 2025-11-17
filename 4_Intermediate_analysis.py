@@ -1,4 +1,4 @@
-/*
+"""
 Purpose:
 
 To understand which odds ranges (low odds vs high odds) produced the best betting performance.
@@ -42,7 +42,7 @@ Table of odds buckets with profit, loss, ROI, stake, count
 
 Exported as: odds_bucket_roi.xlsx
 
-*/
+"""
 bins = [0,1.5,2.0,2.5,3.0,5.0,100]
 labels = ['<1.5','1.5-2.0','2.0-2.5','2.5-3.0','3.0-5.0','5.0+']
 df['odds_bucket'] = pd.cut(df['odds'], bins=bins, labels=labels, include_lowest=True)
